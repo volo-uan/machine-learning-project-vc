@@ -24,12 +24,24 @@ class MLP(nn.Module):
     def __init__(self, in_features, n_classes, hidden=(256,), activation=nn.ReLU):
         super().__init__()
         # TODO (Z1)
-        raise NotImplementedError("Z1: MLP.__init__")
+        layers = [nn.Flatten()]
+        previous_width = in_features
+
+        for width in hidden:
+            layers.append(nn.Linear(previous_width, width))
+
+            if activation is not None:
+                layers.append(activation())
+
+            previous_width = width
+
+        layers.append(nn.Linear(previous_width, n_classes))
+
+        self.net = nn.Sequential(*layers)
 
     def forward(self, x):
         # TODO (Z1)
-        raise NotImplementedError("Z1: MLP.forward")
-
+        return self.net(x)
 
 def count_parameters(model):
     """Number of all parameters (weights and biases) of the model."""
